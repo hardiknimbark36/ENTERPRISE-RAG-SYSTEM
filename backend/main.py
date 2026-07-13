@@ -104,10 +104,10 @@ async def upload_document(file: UploadFile = File(...)):
 async def ask_question(request: QueryRequest):
     """Performs strict contextual guardrail matching before answering."""
     try:
-       query_vector = get_embedding(request.question)
+        query_vector = get_embedding(request.question)
         
         # Query Pinecone
-       search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
+        search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
         
         # Guardrail check: Minimum similarity score validation
         relevant_chunks = []
