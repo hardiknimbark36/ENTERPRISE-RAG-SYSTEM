@@ -1,7 +1,6 @@
 import os
 import io
 import requests
-import time
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -32,16 +31,16 @@ if not GROQ_API_KEY or not PINECONE_API_KEY:
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(PINECONE_INDEX_NAME)
 groq_client = Groq(api_key=GROQ_API_KEY)
+def get_embedding(text):
+    # This asks Pinecone to create the vectors instead of Hugging Face!
+    embedding_response = pc.inference.embed(
+        model="multilingual-e5-large",
+        inputs=[text],
+        parameters={"input_type": "passage", "truncate": "END"}
+    )
+    return embedding_response[0].values
 
 # Load embedding model locally (Free & Open Source)
-HF_TOKEN = os.getenv("HF_TOKEN")
-HF_API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
-session = requests.Session() # To keep the network connection open
-def get_embedding(text):
-    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-    # We now use session.post instead of requests.post-Since it can be more efficient for multiple requests
-    response = session.post(HF_API_URL, headers=headers, json={"inputs": text, "options": {"wait_for_model": True}})
-    return response.json()
 
 class QueryRequest(BaseModel):
     question: str
@@ -84,8 +83,7 @@ async def upload_document(file: UploadFile = File(...)):
         # Upsert chunks to Pinecone with metadata linking back to file name
         vectors_to_upsert = []
         for idx, chunk in enumerate(chunks):
-            # embedding = get_embedding(chunk)
-            embedding = [0.1] * 384  # Dummy vector to bypass Hugging Face
+            embedding = get_embedding(chunk)
             chunk_id = f"{file.filename}_chunk_{idx}"
             vectors_to_upsert.append({
                 "id": chunk_id,
@@ -108,9 +106,8 @@ async def upload_document(file: UploadFile = File(...)):
 async def ask_question(request: QueryRequest):
     """Performs strict contextual guardrail matching before answering."""
     try:
-        # query_vector = get_embedding(request.question)
-        query_vector = [0.1] * 384  # Dummy vector for the query
-
+        query_vector = get_embedding(request.question)
+        
         # Query Pinecone
         search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
         
