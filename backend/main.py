@@ -83,7 +83,8 @@ async def upload_document(file: UploadFile = File(...)):
         # Upsert chunks to Pinecone with metadata linking back to file name
         vectors_to_upsert = []
         for idx, chunk in enumerate(chunks):
-            embedding = get_embedding(chunk)
+            # embedding = get_embedding(chunk)
+            embedding = [0.1] * 384  # Dummy vector to bypass Hugging Face
             chunk_id = f"{file.filename}_chunk_{idx}"
             vectors_to_upsert.append({
                 "id": chunk_id,
@@ -91,7 +92,7 @@ async def upload_document(file: UploadFile = File(...)):
                 "metadata": {"text": chunk, "source": file.filename}
             })
             time.sleep(0.5) # The speed bump!
-            
+
         # Batch upload to Pinecone (Max 100 per batch for stability)
         for b in range(0, len(vectors_to_upsert), 100):
             index.upsert(vectors=vectors_to_upsert[b:b+100])
@@ -106,7 +107,8 @@ async def upload_document(file: UploadFile = File(...)):
 async def ask_question(request: QueryRequest):
     """Performs strict contextual guardrail matching before answering."""
     try:
-        query_vector = get_embedding(request.question)
+        # query_vector = get_embedding(request.question)
+        query_vector = [0.1] * 384  # Dummy vector for the query
         
         # Query Pinecone
         search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
