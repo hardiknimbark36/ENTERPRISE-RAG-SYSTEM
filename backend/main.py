@@ -35,10 +35,11 @@ groq_client = Groq(api_key=GROQ_API_KEY)
 # Load embedding model locally (Free & Open Source)
 HF_TOKEN = os.getenv("HF_TOKEN")
 HF_API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
-
+session = requests.Session() # To keep the network connection open
 def get_embedding(text):
     headers = {"Authorization": f"Bearer {HF_TOKEN}"}
-    response = requests.post(HF_API_URL, headers=headers, json={"inputs": text, "options": {"wait_for_model": True}})
+    # We now use session.post instead of requests.post-Since it can be more efficient for multiple requests
+    response = session.post(HF_API_URL, headers=headers, json={"inputs": text, "options": {"wait_for_model": True}})
     return response.json()
 
 class QueryRequest(BaseModel):
@@ -89,6 +90,7 @@ async def upload_document(file: UploadFile = File(...)):
                 "values": embedding,
                 "metadata": {"text": chunk, "source": file.filename}
             })
+            time.sleep(0.5) # The speed bump!
             
         # Batch upload to Pinecone (Max 100 per batch for stability)
         for b in range(0, len(vectors_to_upsert), 100):
