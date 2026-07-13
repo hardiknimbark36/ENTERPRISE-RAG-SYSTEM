@@ -1,6 +1,7 @@
 import os
 import io
 import requests
+import time
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
@@ -109,7 +110,7 @@ async def ask_question(request: QueryRequest):
     try:
         # query_vector = get_embedding(request.question)
         query_vector = [0.1] * 384  # Dummy vector for the query
-        
+
         # Query Pinecone
         search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
         
