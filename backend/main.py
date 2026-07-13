@@ -107,7 +107,7 @@ async def ask_question(request: QueryRequest):
        query_vector = get_embedding(request.question)
         
         # Query Pinecone
-        search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
+       search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
         
         # Guardrail check: Minimum similarity score validation
         relevant_chunks = []
