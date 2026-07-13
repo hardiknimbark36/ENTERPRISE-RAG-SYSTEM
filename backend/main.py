@@ -1,11 +1,11 @@
 import os
 import io
+import requests
 from fastapi import FastAPI, UploadFile, File, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from pinecone import Pinecone
 from groq import Groq
-from sentence_transformers import SentenceTransformer
 from pypdf import PdfReader
 from dotenv import load_dotenv
 
@@ -33,7 +33,13 @@ index = pc.Index(PINECONE_INDEX_NAME)
 groq_client = Groq(api_key=GROQ_API_KEY)
 
 # Load embedding model locally (Free & Open Source)
-embedding_model = SentenceTransformer("all-MiniLM-L6-v2")
+HF_TOKEN = os.getenv("HF_TOKEN")
+HF_API_URL = "https://api-inference.huggingface.co/pipeline/feature-extraction/sentence-transformers/all-MiniLM-L6-v2"
+
+def get_embedding(text):
+    headers = {"Authorization": f"Bearer {HF_TOKEN}"}
+    response = requests.post(HF_API_URL, headers=headers, json={"inputs": text, "options": {"wait_for_model": True}})
+    return response.json()
 
 class QueryRequest(BaseModel):
     question: str
@@ -76,7 +82,7 @@ async def upload_document(file: UploadFile = File(...)):
         # Upsert chunks to Pinecone with metadata linking back to file name
         vectors_to_upsert = []
         for idx, chunk in enumerate(chunks):
-            embedding = embedding_model.encode(chunk).tolist()
+            embedding = get_embedding(chunk)
             chunk_id = f"{file.filename}_chunk_{idx}"
             vectors_to_upsert.append({
                 "id": chunk_id,
@@ -98,7 +104,7 @@ async def upload_document(file: UploadFile = File(...)):
 async def ask_question(request: QueryRequest):
     """Performs strict contextual guardrail matching before answering."""
     try:
-        query_vector = embedding_model.encode(request.question).tolist()
+       query_vector = get_embedding(request.question)
         
         # Query Pinecone
         search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
