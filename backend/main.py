@@ -44,7 +44,9 @@ def get_embedding(text):
 
 class QueryRequest(BaseModel):
     question: str
-
+@app.get("/")
+async def health_check():
+    return {"status": "Alive and kicking!"}
 @app.post("/upload")
 async def upload_document(file: UploadFile = File(...)):
     """Extracts text from an uploaded PDF, chunks it, and updates Pinecone."""
