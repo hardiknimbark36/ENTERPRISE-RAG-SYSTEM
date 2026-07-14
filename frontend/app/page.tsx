@@ -20,7 +20,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://obscure-fiesta-v67p99954773pqxw-8000.app.github.dev/ask", {  
+      const response = await fetch("https://enterprise-rag-system-21qh.onrender.com/ask", {  
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: newHistory[newHistory.length - 1].content }),
@@ -43,7 +43,7 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://obscure-fiesta-v67p99954773pqxw-8000.app.github.dev/upload", {
+      const response = await fetch("https://enterprise-rag-system-21qh.onrender.com/upload", {
         method: "POST",
         body: formData,
       });
