@@ -38,8 +38,15 @@ def get_embedding(text):
         inputs=[text],
         parameters={"input_type": "passage", "truncate": "END"}
     )
-    return embedding_response[0].values
-
+    return embedding_response.data[0].values
+def get_query_embedding(text):
+    # This is the NEW function you are adding right below it!
+    embedding_response = pc.inference.embed(
+        model="multilingual-e5-large",
+        inputs=[str(text)],
+        parameters={"input_type": "query", "truncate": "END"}
+    )
+    return embedding_response.data[0].values
 # Load embedding model locally (Free & Open Source)
 
 class QueryRequest(BaseModel):
@@ -107,7 +114,7 @@ async def upload_document(file: UploadFile = File(...)):
 async def ask_question(request: QueryRequest):
     """Performs strict contextual guardrail matching before answering."""
     try:
-        query_vector = get_embedding(request.question)
+        query_vector = get_query_embedding(request.question)
         
         # Query Pinecone
         search_results = index.query(vector=query_vector, top_k=3, include_metadata=True)
