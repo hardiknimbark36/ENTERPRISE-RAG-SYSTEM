@@ -92,7 +92,6 @@ async def upload_document(file: UploadFile = File(...)):
                 "values": embedding,
                 "metadata": {"text": chunk, "source": file.filename}
             })
-            time.sleep(0.5) # The speed bump!
 
         # Batch upload to Pinecone (Max 100 per batch for stability)
         for b in range(0, len(vectors_to_upsert), 100):
