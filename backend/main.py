@@ -15,7 +15,7 @@ app = FastAPI(title="Enterprise Multi-Doc RAG API")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],  # Allows all origins (your frontend) to connect
-    allow_credentials=True,
+    allow_credentials=False,
     allow_methods=["*"],  # Allows POST, GET, etc.
     allow_headers=["*"],  # Allows all headers
 )
