@@ -20,7 +20,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("https://enterprise-rag-system-21qh.onrender.com/ask", {  
+      const response = await fetch("/tunnel/ask", {  
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: newHistory[newHistory.length - 1].content }),
@@ -43,7 +43,7 @@ export default function Home() {
     formData.append("file", file);
 
     try {
-      const response = await fetch("https://enterprise-rag-system-21qh.onrender.com/upload", {
+      const response = await fetch("/tunnel/upload", {
         method: "POST",
         body: formData,
       });
