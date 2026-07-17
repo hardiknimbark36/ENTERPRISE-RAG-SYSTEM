@@ -20,7 +20,7 @@ export default function Home() {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/tunnel/ask", {  
+      const response = await fetch("/tunnel/ask", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ question: newHistory[newHistory.length - 1].content }),
@@ -31,13 +31,13 @@ export default function Home() {
     } catch (error) {
       setHistory([...newHistory, { role: "AI", content: "Error connecting to backend." }]);
     }
- 
+
     setIsLoading(false);
   };
 
   const handleUpload = async () => {
     if (!file) return;
-    
+
     setUploadStatus("Uploading to AskDocAI...");
     const formData = new FormData();
     formData.append("file", file);
@@ -47,7 +47,7 @@ export default function Home() {
         method: "POST",
         body: formData,
       });
-      
+
       if (response.ok) {
         setUploadStatus("✅ Upload successful! You can now ask questions.");
       } else {
@@ -58,15 +58,12 @@ export default function Home() {
     }
   };
 
-  // Prevent flicker while Clerk checks auth status
   if (!isLoaded) {
     return <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">Loading...</div>;
   }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white flex flex-col items-center p-10 font-sans relative">
-      
-      {/* --- USER PROFILE BUTTON (Top Right) --- */}
       <div className="absolute top-6 right-8">
         {isSignedIn && <UserButton />}
       </div>
@@ -74,7 +71,6 @@ export default function Home() {
       <h1 className="text-4xl font-bold text-blue-500 mb-2">AskDoc AI</h1>
       <p className="text-gray-400 mb-8">Grounded answers from your documents — powered by RAG</p>
 
-      {/* --- WHAT LOGGED OUT USERS SEE --- */}
       {!isSignedIn ? (
         <div className="flex flex-col items-center justify-center mt-20 bg-gray-800 p-10 rounded-lg shadow-xl border border-gray-700">
           <p className="mb-6 text-xl text-gray-300">Please sign in to securely access your documents.</p>
@@ -85,7 +81,6 @@ export default function Home() {
           </SignInButton>
         </div>
       ) : (
-        /* --- WHAT LOGGED IN USERS SEE --- */
         <>
           <div className="mb-6 flex flex-col items-center justify-center gap-3 w-full max-w-3xl">
             <div className="flex items-center justify-center gap-4">
@@ -104,6 +99,13 @@ export default function Home() {
               </button>
             </div>
             {uploadStatus && <p className="text-sm text-blue-400">{uploadStatus}</p>}
+
+            {/* --- NEW RENDER COLD-START WARNING --- */}
+            <div className="mt-2 text-center max-w-md p-3 bg-gray-800/40 border border-gray-700/50 rounded-lg">
+              <p className="text-xs text-gray-400 leading-relaxed">
+                ⚙️ <strong className="text-gray-300">Performance Note:</strong> This app uses a free backend instance. If idle, the server can take up to <span className="text-blue-400 font-semibold">50 seconds to wake up</span> on your first request.
+              </p>
+            </div>
           </div>
 
           <div className="w-full max-w-3xl bg-gray-800 rounded-lg shadow-xl p-6 mb-6 h-[500px] overflow-y-auto flex flex-col space-y-4">
