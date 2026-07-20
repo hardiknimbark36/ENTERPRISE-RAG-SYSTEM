@@ -1,0 +1,5 @@
+# AskDoc AI - Enterprise RAG System
+
+🔗 **[Live Demo](https://enterprise-rag-system-one.vercel.app)** | 📂 **[Backend API](https://enterprise-rag-system-2lqh.onrender.com/docs)**
+
+AskDoc AI is a full-stack Retrieval-Augmented Generation (RAG) system that allows users to securely upload PDF documents and ask questions grounded entirely in their custom data.
