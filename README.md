@@ -6,7 +6,7 @@ Unlike generic AI chatbots that guess or hallucinate, AskDoc AI refuses to answe
 
 🔗 **[Live Demo](https://enterprise-rag-system-one.vercel.app/)** &nbsp;|&nbsp; 📂 **[Backend API](https://enterprise-rag-system-2lqh.onrender.com/docs)**
 
-<img width="720" height="406" alt="RAG SYSTEM_Working video" src="https://github.com/user-attachments/assets/da92b1a1-5b9f-4738-b18b-5a648d362dfd" />
+<img width="640" height="360" alt="4e80a41c-8c74-483d-8a3e-a6c3a1cc9396" src="https://github.com/user-attachments/assets/3bb9bb9a-f28f-43e1-8290-ed19c218f7dd" />
 
 
 ---
@@ -35,20 +35,14 @@ Companies cannot deploy generic LLMs (like ChatGPT) directly to customers or emp
 
 ## 🏗️ System Architecture
 
-```text
-┌─────────────┐      ┌──────────────────┐      ┌─────────────────┐
-│   Browser   │─────▶│  Next.js Server   │─────▶│  FastAPI Backend │
-│  (Clerk     │      │  (Vercel)         │      │  (Render)        │
-│   Auth UI)  │◀─────│  /tunnel/* routes │◀─────│                  │
-└─────────────┘      └──────────────────┘      └────────┬─────────┘
-                                                          │
-                                          ┌───────────────┼───────────────┐
-                                          ▼               ▼               ▼
-                                    ┌──────────┐   ┌────────────┐   ┌──────────┐
-                                    │ Pinecone │   │ HF Inference│   │  Groq    │
-                                    │ (Vector  │   │ API         │   │ (Llama   │
-                                    │  Store)  │   │ (Embeddings)│   │  3.3)    │
-                                    └──────────┘   └────────────┘   └──────────┘
+```mermaid
+flowchart TD
+    A["Browser (Clerk Auth UI)"] <-->|/tunnel/* routes| B["Next.js Server (Vercel)"]
+    B <--> C["FastAPI Backend (Render)"]
+    
+    C --> D["Pinecone (Vector Store)"]
+    C --> E["HF Inference API (Embeddings)"]
+    C --> F["Groq (Llama 3.3)"]
 
 ```
 
