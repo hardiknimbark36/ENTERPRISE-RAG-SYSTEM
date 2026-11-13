@@ -24,12 +24,12 @@ Companies cannot deploy generic LLMs (like ChatGPT) directly to customers or emp
 
 ## ✨ Key Features
 
-- 🔐 **Authenticated Access** - Secure sign-in/sign-up flow using Clerk
-- 📄 **PDF Upload & Processing** - Automatic chunking and vectorization of documents
-- 💬 **Grounded Chat Interface** - Real-time Q&A restricted to document content
-- 🚫 **Hallucination Guardrails** - Refuses to answer when context is insufficient
-- ⚡ **Low-Latency Inference** - Powered by Llama 3.3 via Groq's LPU infrastructure
-- 🎨 **Polished UX** - Loading states, error handling, and cold-start transparency
+-  **Authenticated Access** - Secure sign-in/sign-up flow using Clerk
+-  **PDF Upload & Processing** - Automatic chunking and vectorization of documents
+-  **Grounded Chat Interface** - Real-time Q&A restricted to document content
+-  **Hallucination Guardrails** - Refuses to answer when context is insufficient
+-  **Low-Latency Inference** - Powered by Llama 3.3 via Groq's LPU infrastructure
+-  **Polished UX** - Loading states, error handling, and cold-start transparency
 
 ---
 
