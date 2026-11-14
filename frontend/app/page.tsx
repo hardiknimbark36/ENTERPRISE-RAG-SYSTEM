@@ -69,7 +69,7 @@ export default function Home() {
       </div>
 
       <h1 className="text-4xl font-bold text-blue-500 mb-2">AskDoc AI</h1>
-      <p className="text-gray-400 mb-8">Grounded answers from your documents — powered by RAG</p>
+      <p className="text-gray-400 mb-8">Retrieval-Augmented Generation built for your personal documents</p>
 
       {!isSignedIn ? (
         <div className="flex flex-col items-center justify-center mt-20 bg-gray-800 p-10 rounded-lg shadow-xl border border-gray-700">
