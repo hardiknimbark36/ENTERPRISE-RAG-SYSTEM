@@ -8,3 +8,5 @@ pydantic
 python-multipart==0.0.9
 pypdf==4.1.0
 python-dotenv==1.0.1
+
+cohere

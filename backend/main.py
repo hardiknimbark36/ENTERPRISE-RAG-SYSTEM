@@ -8,6 +8,7 @@ from pinecone import Pinecone
 from groq import Groq
 from pypdf import PdfReader
 from dotenv import load_dotenv
+import cohere
 
 load_dotenv()
 
@@ -27,6 +28,12 @@ PINECONE_INDEX_NAME = os.getenv("PINECONE_INDEX_NAME", "rag-index")
 
 if not GROQ_API_KEY or not PINECONE_API_KEY:
     raise ValueError("Missing critical API keys in environment variables!")
+
+# Add this right below your Groq client initialization
+COHERE_API_KEY = os.getenv("COHERE_API_KEY")
+if not COHERE_API_KEY:
+    raise ValueError("Missing Cohere API Key!")
+cohere_client = cohere.Client(api_key=COHERE_API_KEY)
 
 pc = Pinecone(api_key=PINECONE_API_KEY)
 index = pc.Index(PINECONE_INDEX_NAME)
@@ -133,8 +140,20 @@ async def ask_question(request: QueryRequest):
                 "sources": []
             }
             
-        # Package Context for Llama-3.3
-        context_block = "\n---\n".join(relevant_chunks)
+        # COHERE RERANKER
+        rerank_response = cohere_client.rerank(
+            query=request.question,
+            documents=relevant_chunks,
+            top_n=2,
+            model="rerank-english-v3.0"
+        )
+        
+        # Extract only the text from the top-scoring chunks
+        best_chunks = [relevant_chunks[hit.index] for hit in rerank_response.results]
+
+        # -- PACKAGE CONTEXT FOR LLAMA 3.3 --
+        context_block = "\n---\n".join(best_chunks)
+        
         system_prompt = (
             "You are a strict Enterprise Document Assistant. Your primary rule is to answer the user query "
             "using ONLY the verified context block provided below. Do not use outside facts. If the information "
