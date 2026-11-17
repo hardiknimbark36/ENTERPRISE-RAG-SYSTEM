@@ -60,7 +60,7 @@ flowchart TD
 
 ---
 
-## 🔧 Tech Stack
+## Tech Stack
 
 | Layer | Technology | Why |
 | --- | --- | --- |
@@ -75,7 +75,7 @@ flowchart TD
 
 ---
 
-## 🧠 Engineering Challenges & Solutions
+## Engineering Challenges & Solutions
 
 This section documents real problems solved during development - not just a tutorial follow-along.
 
@@ -100,13 +100,13 @@ This section documents real problems solved during development - not just a tuto
 **Solution**: Combined a similarity-score threshold check (rejecting low-confidence retrievals before they reach the LLM) with a strict system prompt constraining the model to only use provided context.
 
 ---
-## 📸 Screenshots
+## Screenshots
 
-### 🔐 Step 1 - Authentication Wall
+### Step 1 - Authentication Wall
 *Unauthenticated users are blocked until they sign in*
 <img width="962" height="517" alt="Sign in page" src="https://github.com/user-attachments/assets/f59f5261-c4f1-4af9-8c6d-00117565b446" />
 
-### 🔑 Step 2 - Clerk Sign In Modal
+### Step 2 - Clerk Sign In Modal
 *Supports Google OAuth and Email - secured by Clerk* 
 <img width="953" height="636" alt="Sign in 2" src="https://github.com/user-attachments/assets/65c38976-3d8d-49de-8683-b2e84b88bfe9" />
 
@@ -116,7 +116,7 @@ This section documents real problems solved during development - not just a tuto
 
 ---
 
-## 🚀 Local Development Setup
+## Local Development Setup
 
 ### Prerequisites
 
@@ -156,7 +156,7 @@ Visit `http://localhost:3000`
 
 ---
 
-## 📁 Project Structure
+## Project Structure
 
 ```text
 ├── frontend/
