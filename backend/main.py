@@ -129,10 +129,10 @@ async def ask_question(request: QueryRequest):
         # Guardrail check: Minimum similarity score validation
         relevant_chunks = []
         sources = set()
-        for match in search_results.get("matches", []):
-            if match.get("score", 0) >= 0.0: # Guardrail Score Threshold
-                relevant_chunks.append(match["metadata"]["text"])
-                sources.add(match["metadata"]["source"])
+        for match in search_results.matches:
+            if match.score >= 0.0: # Guardrail Score Threshold
+                relevant_chunks.append(match.metadata["text"])
+                sources.add(match.metadata["source"])
                 
         if not relevant_chunks:
             return {
@@ -175,4 +175,5 @@ async def ask_question(request: QueryRequest):
             "sources": list(sources)
         }
     except Exception as e:
+        print(f"FATAL ERROR IN /ASK: {str(e)}")
         raise HTTPException(status_code=500, detail=str(e))
