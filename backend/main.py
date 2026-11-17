@@ -144,7 +144,7 @@ async def ask_question(request: QueryRequest):
         rerank_response = cohere_client.rerank(
             query=request.question,
             documents=relevant_chunks,
-            top_n=2,
+            top_n=min(2, len(relevant_chunks)),
             model="rerank-english-v3.0"
         )
         
