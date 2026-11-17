@@ -166,7 +166,7 @@ async def ask_question(request: QueryRequest):
                 {"role": "system", "content": system_prompt},
                 {"role": "user", "content": request.question}
             ],
-            model="llama-3.3-70b-versatile",
+            model="openai/gpt-oss-120b",
             temperature=0.2 # Lower temperature = higher factual accuracy
         )
         
